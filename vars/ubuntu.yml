@@ -1,0 +1,2 @@
+etcd_conf_dest: /etc/default/etcd
+etcd_conf_prepend: "export "

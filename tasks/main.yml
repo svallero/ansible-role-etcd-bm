@@ -1,2 +1,55 @@
 ---
 # tasks file for ansible-role-etcd-bm/
+- name: Fail if the OS is not supported
+  fail:
+    msg=This role is not supported on {{ansible_distribution}}
+  when: "ansible_distribution != 'Ubuntu' and ansible_os_family != 'RedHat'"
+
+- name: Include distribution-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "vars/{{ ansible_distribution|lower }}.yml"
+    - "vars/{{ ansible_os_family|lower }}.yml"
+
+# Add calico apt repo to fetch etcd 
+- name: Add calico apt repository
+  apt_repository: repo='ppa:project-calico/liberty-testing' 
+  when: ansible_distribution == 'Ubuntu'
+
+# Install etcd from repo
+- name: "Install etcd"
+  package:
+     name=etcd
+     state=present
+
+# Configure etcd cluster or single-instance
+- name: "Write the configuration file"
+  template: 
+     src=etcd.conf 
+     dest={{ etcd_conf_dest }}
+     owner=root 
+     group=root
+     force=yes 
+     backup=yes
+  notify:
+    - restart etcd
+  
+# Write the upstart script for Ubuntu
+- name: "Write upstart script"
+  copy: src=etcd_init.conf dest=/etc/init/etcd.conf owner=root group=root mode=0644
+  when: ansible_distribution == 'Ubuntu'
+
+   
+- name: "Make sure etcd is running"
+  service: name=etcd state=started
+
+# Include the relevant distro-specific task
+#- name: Perform setup for Ubuntu
+#  include: ubuntu.yml
+#  when: ansible_distribution == 'Ubuntu'
+
+#- name: Perform setup for EL and derivatives
+#  include: redhat.yml
+#  when: ansible_os_family == 'RedHat'
+
+- meta: flush_handlers
