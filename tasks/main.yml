@@ -21,6 +21,8 @@
   package:
      name=etcd
      state=present
+  environment:
+     RUNLEVEL: 1
 
 # Configure etcd cluster or single-instance
 - name: "Write the configuration file"
@@ -31,8 +33,8 @@
      group=root
      force=yes 
      backup=yes
-  notify:
-    - restart etcd
+  #notify:
+  #  - restart etcd
   
 # Write the upstart script for Ubuntu
 - name: "Write upstart script"
@@ -42,14 +44,5 @@
    
 - name: "Make sure etcd is running"
   service: name=etcd state=started
-
-# Include the relevant distro-specific task
-#- name: Perform setup for Ubuntu
-#  include: ubuntu.yml
-#  when: ansible_distribution == 'Ubuntu'
-
-#- name: Perform setup for EL and derivatives
-#  include: redhat.yml
-#  when: ansible_os_family == 'RedHat'
 
 - meta: flush_handlers
