@@ -8,7 +8,7 @@ Supported operating systems: CentoOS 7 and Ubuntu 14.04.
 This role has been specifically developed to be used for the deployment of Calico in the framework of INDIGO-DataCloud project.
 
 
-The software is installed from the Centos "extras" repository and from the Calico repositories for Ubuntu.
+The software is installed from the Centos *extras* repository and from the Calico repositories for Ubuntu.
 
 Role Variables
 --------------
