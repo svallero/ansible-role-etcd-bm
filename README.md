@@ -10,7 +10,7 @@ Role Variables
     etcd_peers_list: ["hosh1","host2","host3"]
     etcd_peers_group: groupname
 
-The two vaiables above are mutually exclusive. If etcd_peers_list is defined, etcd_peers_group is ignored. 
+The two variables above are mutually exclusive. If etcd_peers_list is defined, etcd_peers_group is ignored. 
 If etcd_peers_list is not defined, the list of hosts is taken from the inventory group specified in the etcd_peers_group variable. 
 The hosts making up the etcd cluster can be specified either in terms of hostname or IP. 
 Each host in the inventory is configured using the hostname or the IP defined in the list (group). If none of the list entries corresponds to the host hostname or one of its IPs, the role will fail.
