@@ -1,38 +1,61 @@
-Role Name
+etcd role
 =========
 
-A brief description of the role goes here.
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+System wide installation of etcd on bare metal or virtual machine (not containerized). Supported operating systems: CentoOS 7 and Ubuntu 14.04. This role has been specifically developed to be used for the deployment of Calico in the framework of INDIGO-DataCloud project.
+The software is installed from the Centos "extras" repository and from the Calico repositories for Ubuntu.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+    etcd_peers_list: ["hosh1","host2","host3"]
+    etcd_peers_group: groupname
+
+The two vaiables above are mutually exclusive. If etcd_peers_list is defined, etcd_peers_group is ignored. 
+If etcd_peers_list is not defined, the list of hosts is taken from the inventory group specified in the etcd_peers_group variable. 
+The hosts making up the etcd cluster can be specified either in terms of hostname or IP. 
+Each host in the inventory is configured using the hostname or the IP defined in the list (group). If none of the list entries corresponds to the host hostname or one of its IPs, the role will fail.
+
+    etcd_client_port: 2379 (default)
+    etcd_peer_port: 2380 (default)
+    etcd_url_scheme: http (default)
+
+    etcd_initial_cluster_state: "new" (default)
+Cooresponds to the etcd variable ETCD_INITIAL_CLUSTER_STATE, if this option is set to existing etcd will attempt to join an existing cluster.
+
+    etcd_force_new_cluster: true
+The corresponding etcd variable  ETCD_FORCE_NEW_CLUSTER is considered unsafe, in particular it does not show the expected behaviour in the Ubuntu case. When this variable is set to true, the etcd data dir /var/lib/etcd/default.etcd/member is removed, in order to force the cration of a new cluster. In particular this is needed to create a new one-member cluster. This forces the removal of all the existing members in the cluster and adds the host as unique member. 
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+There is no dependency on other roles. 
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Using etcd_peers_list variable:
 
     - hosts: servers
+      remote_user: root
       roles:
-         - { role: username.rolename, x: 42 }
+        - { role: ansible-role-etcd-bm, etcd_peers_list: ["host1","host2,"host3"]  }
+   
+the host name "localost" is allowed for a stndalone cluster.
+Using etcd_peers_group variable:
+
+    - hosts: servers
+      remote_user: root
+      roles:
+        - { role: ansible-role-etcd-bm, etcd_peers_group: servers  }
 
 License
 -------
 
-BSD
+Apache Licence v2 [1]
+
+[1] http://www.apache.org/licenses/LICENSE-2.0
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Mailto: svallero AT to.infn.it
