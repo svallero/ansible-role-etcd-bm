@@ -43,21 +43,17 @@
 #  notify:
 #    - restart etcd
 
-
 # Write the upstart script for Ubuntu
 #- name: "Write upstart script"
 #  #copy: src=etcd_init.conf dest=/etc/init/etcd.conf owner=root group=root mode=0644
 #  copy: src=etcd_init dest=/etc/init.d/etcd owner=root group=root mode=0644
 #  when: ansible_distribution == 'Ubuntu'
 #  register: etcd_startup
-  
-
 
 - name: "Restart etcd if config files changed"
   service: name=etcd state=restarted
   #when: etcd_config.changed or etcd_startup.changed
   when: etcd_config.changed 
-
  
 - name: "Stop etcd when etcd_force_new_cluster is set"
   service: name=etcd state=stopped
@@ -66,7 +62,6 @@
 - name: "Remove etcd data dir when etcd_force_new_cluster is set"
   file: path=/var/lib/etcd/default.etcd/member state=absent
   when: etcd_force_new_cluster == true
-
 
 - name: "Make sure etcd is running"
   service: name=etcd state=started

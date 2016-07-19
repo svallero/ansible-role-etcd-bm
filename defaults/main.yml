@@ -1,8 +1,9 @@
 ---
 # defaults file for ansible-role-etcd-bm
-#etcd_peers_list: ["192.168.2.182","192.168.2.184","192.168.2.185"]
+# etcd peer can be hostname or IP
+#etcd_peers_list: ["host1","host2","host3"]
 # If etcd_peers_list variable is defined, the one below has no effect
-etcd_peers_group: proviamoci 
+etcd_peers_group: servers 
 
 etcd_peers: "
    {%- if etcd_peers_list is not defined -%}                       
@@ -53,5 +54,5 @@ etcd_initial_cluster: "
 "
 
 etcd_initial_cluster_state: "new"
-etcd_force_new_cluster: true
+etcd_force_new_cluster: false
 
