@@ -1,2 +1,2 @@
-etcd_conf_dest: /etc/default/etcd
-etcd_conf_prepend: "export "
+indigo_dc_etcd_bm_conf_dest: /etc/default/etcd
+indigo_dc_etcd_bm_conf_prepend: "export "

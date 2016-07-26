@@ -1,15 +1,15 @@
 ---
 # defaults file for ansible-role-etcd-bm
 # etcd peer can be hostname or IP
-#etcd_peers_list: ["host1","host2","host3"]
-# If etcd_peers_list variable is defined, the one below has no effect
-etcd_peers_group: servers 
+#indigo_dc_etcd_bm_peers_list: ["host1","host2","host3"]
+# If indigo_dc_etcd_bm_peers_list variable is defined, the one below has no effect
+indigo_dc_etcd_bm_peers_group: servers 
 
-etcd_peers: "
-   {%- if etcd_peers_list is not defined -%}                       
-      {%- if etcd_peers_group is defined -%}                       
+indigo_dc_etcd_bm_peers: "
+   {%- if indigo_dc_etcd_bm_peers_list is not defined -%}                       
+      {%- if indigo_dc_etcd_bm_peers_group is defined -%}                       
          [
-         {%- for host in groups[etcd_peers_group] -%}
+         {%- for host in groups[indigo_dc_etcd_bm_peers_group] -%}
             \"{{ host }}\"
             {%- if not loop.last -%}
                ,
@@ -20,39 +20,39 @@ etcd_peers: "
          localhost                                  
       {%- endif -%} 
    {%- else -%}
-      {{etcd_peers_list}}        
+      {{indigo_dc_etcd_bm_peers_list}}        
    {%- endif -%} 
 "
 
-etcd_client_port: 2379
-etcd_peer_port: 2380
-etcd_url_scheme: http
+indigo_dc_etcd_bm_client_port: 2379
+indigo_dc_etcd_bm_peer_port: 2380
+indigo_dc_etcd_bm_url_scheme: http
 
-etcd_name: "
-   {%- for host in etcd_peers -%}
+indigo_dc_etcd_bm_name: "
+   {%- for host in indigo_dc_etcd_bm_peers -%}
       {%- if (host in ansible_all_ipv4_addresses) or (host == ansible_hostname) or (host == ansible_hostname+'.'+ansible_domain) or (host == 'localhost') or (host == '127.0.0.1') -%}
          {{host}}
       {%- endif -%}
    {%- endfor -%}
 "
 
-etcd_advertise_client_urls: "{{ etcd_client_url_scheme }}://{{ etcd_name }}:{{ etcd_client_port }}"
-etcd_listen_client_urls: "{{ etcd_client_url_scheme }}://0.0.0.0:{{ etcd_client_port }}"
-etcd_client_url_scheme: "{{ etcd_url_scheme }}"
-etcd_peer_url_scheme: "{{ etcd_url_scheme }}"
-etcd_initial_advertise_peer_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_name }}:{{ etcd_peer_port }}"
-etcd_listen_peer_urls: "{{ etcd_peer_url_scheme }}://0.0.0.0:{{ etcd_peer_port }}"
-etcd_initial_cluster_token: etcd-cluster-1
+indigo_dc_etcd_bm_advertise_client_urls: "{{ indigo_dc_etcd_bm_client_url_scheme }}://{{ indigo_dc_etcd_bm_name }}:{{ indigo_dc_etcd_bm_client_port }}"
+indigo_dc_etcd_bm_listen_client_urls: "{{ indigo_dc_etcd_bm_client_url_scheme }}://0.0.0.0:{{ indigo_dc_etcd_bm_client_port }}"
+indigo_dc_etcd_bm_client_url_scheme: "{{ indigo_dc_etcd_bm_url_scheme }}"
+indigo_dc_etcd_bm_peer_url_scheme: "{{ indigo_dc_etcd_bm_url_scheme }}"
+indigo_dc_etcd_bm_initial_advertise_peer_urls: "{{ indigo_dc_etcd_bm_peer_url_scheme }}://{{ indigo_dc_etcd_bm_name }}:{{ indigo_dc_etcd_bm_peer_port }}"
+indigo_dc_etcd_bm_listen_peer_urls: "{{ indigo_dc_etcd_bm_peer_url_scheme }}://0.0.0.0:{{ indigo_dc_etcd_bm_peer_port }}"
+indigo_dc_etcd_bm_initial_cluster_token: etcd-cluster-1
 
-etcd_initial_cluster: "
-   {%- for host in etcd_peers -%}
-      {{ host }}={{ etcd_peer_url_scheme }}://{{ host }}:{{ etcd_peer_port }}
+indigo_dc_etcd_bm_initial_cluster: "
+   {%- for host in indigo_dc_etcd_bm_peers -%}
+      {{ host }}={{ indigo_dc_etcd_bm_peer_url_scheme }}://{{ host }}:{{ indigo_dc_etcd_bm_peer_port }}
       {%- if not loop.last -%}
          , 
       {%- endif -%}
    {%- endfor -%}
 "
 
-etcd_initial_cluster_state: "new"
-etcd_force_new_cluster: false
+indigo_dc_etcd_bm_initial_cluster_state: "new"
+indigo_dc_etcd_bm_force_new_cluster: false
 

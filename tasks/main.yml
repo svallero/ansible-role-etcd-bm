@@ -13,8 +13,8 @@
 
 - name: "Fail if host is not in the etcd peers list"
   fail:
-    msg="Host does not belong to the peers list {{etcd_peers}}"
-  when: etcd_name == ""
+    msg="Host does not belong to the peers list {{indigo_dc_etcd_bm_peers}}"
+  when: indigo_dc_etcd_bm_name == ""
 
 # Add calico apt repo to fetch etcd 
 - name: "Add calico apt repository"
@@ -34,12 +34,12 @@
 - name: "Write the configuration file"
   template: 
      src=etcd.conf 
-     dest={{ etcd_conf_dest }}
+     dest={{ indigo_dc_etcd_bm_conf_dest }}
      owner=root 
      group=root
      force=yes 
      backup=yes
-  register: etcd_config
+  register: indigo_dc_etcd_bm_config
 #  notify:
 #    - restart etcd
 
@@ -52,16 +52,16 @@
 
 - name: "Restart etcd if config files changed"
   service: name=etcd state=restarted
-  #when: etcd_config.changed or etcd_startup.changed
-  when: etcd_config.changed 
+  #when: indigo_dc_etcd_bm_config.changed or indigo_dc_etcd_bm_startup.changed
+  when: indigo_dc_etcd_bm_config.changed 
  
-- name: "Stop etcd when etcd_force_new_cluster is set"
+- name: "Stop etcd when indigo_dc_etcd_bm_force_new_cluster is set"
   service: name=etcd state=stopped
-  when: etcd_force_new_cluster == true
+  when: indigo_dc_etcd_bm_force_new_cluster == true
 
-- name: "Remove etcd data dir when etcd_force_new_cluster is set"
+- name: "Remove etcd data dir when indigo_dc_etcd_bm_force_new_cluster is set"
   file: path=/var/lib/etcd/default.etcd/member state=absent
-  when: etcd_force_new_cluster == true
+  when: indigo_dc_etcd_bm_force_new_cluster == true
 
 - name: "Make sure etcd is running"
   service: name=etcd state=started

@@ -1,2 +1,2 @@
-etcd_conf_dest: /etc/etcd/etcd.conf 
-etcd_conf_prepend: ""
+indigo_dc_etcd_bm_conf_dest: /etc/etcd/etcd.conf 
+indigo_dc_etcd_bm_conf_prepend: ""
